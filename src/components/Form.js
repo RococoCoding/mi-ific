@@ -81,8 +81,8 @@ export default function Form(props) {
         </div>
 
         <div className="input-container">
-          <label className="label" htmlFor="position">Choose your position:</label> 
-          <select
+          <label className="label" htmlFor="position">Pick a role: </label> 
+          <select className="select"
             type="dropdown"
             name="position"
             onChange={updateForm}
@@ -98,7 +98,7 @@ export default function Form(props) {
         </div>
 
         <div className="input-container">
-          <label className="label" htmlFor="weapon">Choose your weapon:</label>
+          <label className="label" htmlFor="weapon">Pick a weapon:</label>
           <input className="input"
             type="text"
             name="weapon"

@@ -72,7 +72,7 @@
 .textarea {
   display: block;
   width: 95%;
-  margin-bottom: 2%;
+  margin: 2% 0;
 }
 
 .bold {
@@ -151,14 +151,33 @@
 /* #region media - mobile under 450px */
 @media only screen and (max-width: 550px) {
   .form-container{
-    background-image: linear-gradient(115deg, rgba(207, 178, 83, 0.9), rgba(207, 178, 83, 0.9)), url("../../dist/assets/galleon.png");
+    height: max-content;
+    padding: 1%;
   }
   .intro {
     font-size: 1.4rem;
   }
   .form {
     margin: 0;
+    padding: 0;
     border: none;
+  }
+  .input {
+    width: 50%;
+  }
+  label > .input {
+    width: max-content;
+  }
+  .checkbox-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+  .check-label {
+    font-size: 1.2rem;
+  }
+  .bold {
+    font-size: 1.7rem;
   }
 
 }
