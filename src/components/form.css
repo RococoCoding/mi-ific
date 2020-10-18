@@ -1,0 +1,164 @@
+.form-container {
+  background-image: linear-gradient(115deg, rgba(207, 178, 83, 0.96), rgba(207, 178, 83, 0.96)), url("../../dist/assets/galleon.png");
+  background-size: 100%;
+  min-height: max-content;
+  height: 100vh;
+  font-size: 1.8rem;
+  padding: 2%;
+  text-align: center;
+}
+
+/* #region header */
+.title {
+  font-size: 4rem;
+  font-family: 'Crimson Text', serif;
+  margin-bottom: 1%;
+}
+
+.academy {
+  font-size: 3.5rem;
+  font-family: 'Tangerine', cursive;
+} 
+
+.intro {
+  font-family: 'Libre Baskerville', serif;
+  text-align: center;
+  line-height: 3rem;
+}
+/* #endregion */
+
+/* #region form */
+.form {
+  width: 50%;
+  margin: 3% auto 0 auto;
+  text-align: left;
+  border: 2px solid black;
+  padding: 2%;
+}
+
+.input-container {
+  padding: 3%;
+}
+
+.input-container:last-of-type {
+  margin-bottom: 1%;
+}
+
+.label {
+ font-weight: bold;
+ font-size: 2rem;
+}
+
+.input {
+  margin: 1%;
+  background-color: white;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  height: 70px;
+  flex-wrap: wrap;
+}
+
+.check-label {
+  margin: 0 1%;
+}
+
+.check-all {
+  margin-bottom: 3%;
+}
+
+.textarea {
+  display: block;
+  width: 95%;
+  margin-bottom: 2%;
+}
+
+.bold {
+  font-weight: bold;
+}
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+.error-check {
+  margin-top: 2%;
+  color: red;
+  font-weight: bold;
+}
+
+.submit-button {
+  margin: 0 0 2% 40%;
+}
+/* #endregion form */
+
+
+/* #region media - laptop large under 1200px */
+@media only screen and (max-width: 1200px) {
+  .form {
+    padding: 1%;
+    width: 60%;
+  }  
+  .intro {
+    font-size: 1.6rem;
+  }
+}
+/* #endregion */
+
+/* #region media - tablet under 1000px */
+@media only screen and (max-width: 1000px) {
+  .form-container {
+    padding: 2% 5%;
+  }
+  .academy {
+    font-size: 4rem;
+    margin-bottom: 1%;
+  }
+  .intro {
+    font-size: 1.9rem;
+    margin-bottom: 1%;
+  }
+  .form {
+    width: 90%;
+  }
+}
+/* #endregion */
+
+/* #region media - small tablets under 700px */
+@media only screen and (max-width: 700px){
+  .form-container {
+    padding: 4%;
+    font-size: 1.5rem;
+  }
+  .title {
+    font-size: 3.4rem;
+  }
+  .academy {
+    font-size: 3.8rem;
+  }
+  .intro {
+    font-size: 1.6rem;
+  }
+  .label {
+    font-size: 1.8rem;
+  }
+}
+/* #endregion */
+
+
+/* #region media - mobile under 450px */
+@media only screen and (max-width: 550px) {
+  .form-container{
+    background-image: linear-gradient(115deg, rgba(207, 178, 83, 0.9), rgba(207, 178, 83, 0.9)), url("../../dist/assets/galleon.png");
+  }
+  .intro {
+    font-size: 1.4rem;
+  }
+  .form {
+    margin: 0;
+    border: none;
+  }
+
+}

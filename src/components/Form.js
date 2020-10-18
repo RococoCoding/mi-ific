@@ -1,89 +1,9 @@
 import React, {useState, useEffect} from "react";
-import styled from "styled-components";
 import * as yup from "yup";
 import axios from "axios";
+import "./form.css";
 
-const StyleForm = styled.form`
-  width: 75%;
-  margin: 1% auto;
-  border: 1px solid black;
-`
-const Bg = styled.img`
-  z-index: -1;
-  width: 25%;
-  position: fixed;
-  opacity: 0.6;
-  top: 40%;
-  left: 40%;
-`
-
-const PageContainer = styled.div`
-  height: 100vh;
-  font-size: 1.8rem;
-  padding: 2%;
-  text-align: center;
-  background-color: rgba(207, 178, 83, 0.7);
-`
-const InputContainer = styled.div`
-  margin-bottom: 1%;
-`
-const InputContainerLast = styled.div`
-  margin-top: 2%;
-  margin-bottom: 1%;
-`
-const Title = styled.h1`
-  font-size: 4rem;
-  font-family: 'Crimson Text', serif;
-  margin-bottom: 1%;
-`
-const Academy = styled.h2`
-  font-size: 3.5rem;
-  font-family: 'Tangerine', cursive;
-`
-
-const Intro = styled.p`
-  font-family: 'Libre Baskerville', serif;
-  text-align: center;
-  line-height: 2.3rem;
-`
-
-const Bold = styled.p`
-  font-weight: bold;
-  font-size: 2rem;
-`
-
-const Label = styled.label`
- font-weight: bold;
- font-size: 2rem;
-`
-const Input = styled.input`
-  margin: 1%;
-  background-color: white;
-`
-
-const Select = styled.select`
-`
-const TextArea = styled.textarea`
-  display: block;
-  margin: 0 auto;
-  width: 50%;
-`
-
-const CheckLabel = styled.label`
-  margin: 0 1%;
-`
-
-const CheckAll = styled.p`
-  margin-bottom: .8%;
-`
-const Error = styled.p`
-  color: red;
-  font-weight: bold;
-`
-const Button = styled.button`
-  margin-bottom: 1%;
-`
-
+//#region form schema
 const formSchema = yup.object().shape({
   name: yup
     .string()
@@ -101,73 +21,68 @@ const formSchema = yup.object().shape({
     .string()
     .min(1, "You must enter an insult.")
 });
+//#endregion
 
 export default function Form(props) {
-  const [formState, setFormState] = useState({
-    name: "",
-    position: "",
-    weapon: "",
-    skills: [],
-    faveInsult: ""
-  });
-
-  const [errorsState, setErrorsState] = useState({});
+  const {formState, setFormState} = props; //formState holds user data, passed down from app.js
+  const [errorsState, setErrorsState] = useState({}); //form validation lives here, doesn't need to be passed anywhere
 
   function submit(e) {
-    e.preventDefault();
-    formSchema.validate(formState, {abortEarly: false})
-      .then(value=>setErrorsState({}))
-      .catch(err=> {
+    e.preventDefault(); //submit doesn't refresh page every time; bad for react which shouldn't require reloading the entire page
+    formSchema.validate(formState, {abortEarly: false}) //abortEarly:false tells yup not to stop at first error so we can get an array of all errors on submit
+      .then(valid => {  //if all OK
+        setErrorsState({}) //reset errors to none
+        axios.post("https://reqres.in/api/users", formState) //submit form data to backend
+          .then(res => {
+            // go to next page
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err=> { //if errors
         let errors = err.inner;
         let errorsObj = {};
         for (let i in errors) {
           let key = errors[i].params.path;
-          errorsObj[key] = errors[i].errors[0];
+          errorsObj[key] = errors[i].errors[0]; //put all errors in an obj to mimic errorsState
         }
-        setErrorsState(errorsObj);
+        setErrorsState(errorsObj); 
     });
-    formSchema.isValid(formState)
-      .then(valid=> {
-        axios.post("https://reqres.in/api/users", formState) //submit form data to url
-        .then(res => console.log(res))
-        .catch(err => console.log(err));
-    })
-  }
+  };
 
-  function updateForm(e) {
-    if (e.target.name === "skills") {
+  function updateForm(e) {//take user input values and store in formState as obj with event target name as key
+    if (e.target.name === "skills") { //checkboxes can have multiple so push values into an array
       setFormState({...formState}, formState[e.target.name].push(e.target.value))
     }
     else {
-      setFormState({...formState, [e.target.name]: e.target.value})
+      setFormState({...formState, [e.target.name]: e.target.value}) 
     }
   }
 
   return (
-    <PageContainer>
-      <Bg src="assets/galleon.png"></Bg>
+    <div className="form-container">
       <header>
-        <Title>SO YOU WANT TO BE A PIRATE</Title>
-        <Academy>The Guybrush Threepwood Academy of Piratical Arts </Academy>
-        <Intro>hereby invites you to join us on a swashbuckling adventure filled with swords, sails and only the foulest of insults.</Intro>
+        <h1 className="title">SO YOU WANT TO BE A PIRATE</h1>
+        <h2 className="academy">The Guybrush Threepwood Academy of Piratical Arts </h2>
+        <p className="intro">hereby invites you to join us on a swashbuckling adventure filled with swords, sails and only the foulest of insults.</p>
+        <p className="intro">Fill out the application below and get started on your new career as a terror of the high seas!</p>
       </header>
 
-      <StyleForm onSubmit={submit}>
-        <InputContainer>
-          <Label htmlFor="name">Name:</Label>
-          <Input 
+      <form className="form" onSubmit={submit}>
+        <div className="input-container">
+          <label className="label" htmlFor="name">Name:</label>
+          <input className="input"
             type="text"
             name="name"
             placeholder="Dudecomb Twoptimber"
             value={formState.name}
             onChange={updateForm}
           /> 
-          {errorsState.name && <Error>{errorsState.name}</Error>}
-        </InputContainer>
+          {errorsState.name && <p className="error">{errorsState.name}</p>}
+        </div>
 
-        <InputContainer>
-          <Label htmlFor="position">Choose your position:</Label> 
-          <Select
+        <div className="input-container">
+          <label className="label" htmlFor="position">Choose your position:</label> 
+          <select
             type="dropdown"
             name="position"
             onChange={updateForm}
@@ -178,82 +93,83 @@ export default function Form(props) {
             <option value="first-mate">First Mate</option>
             <option value="cabin-boy">Cabin boy</option>
             <option value="mascot">Mascot</option>
-          </Select>
-          {errorsState.position && <Error>{errorsState.position}</Error>}
-        </InputContainer>
+          </select>
+          {errorsState.position && <p className="error">{errorsState.position}</p>}
+        </div>
 
-        <InputContainer>
-          <Label htmlFor="weapon">Choose your weapon:</Label>
-          <Input 
+        <div className="input-container">
+          <label className="label" htmlFor="weapon">Choose your weapon:</label>
+          <input className="input"
             type="text"
             name="weapon"
             placeholder="Root beer spritzer"
             value={formState.weapon}
             onChange={updateForm}
           /> 
-          {errorsState.weapon && <Error>{errorsState.weapon}</Error>}
-        </InputContainer>
+          {errorsState.weapon && <p className="error">{errorsState.weapon}</p>}
+        </div>
 
-        <InputContainer>
-          <Bold>Which skills do you want to learn?</Bold>
-          <CheckAll>(Check all that apply)</CheckAll>
-          <CheckLabel htmlFor="insults">
-            <input 
-              type="checkbox"
-              name="skills"
-              value="insults"
-              onChange={updateForm}
-            />Insult Mastery
-          </CheckLabel>
-          <CheckLabel htmlFor="breath">
-            <input 
-              type="checkbox"
-              name="skills"
-              value="breath"
-              onChange={updateForm}
-            />Breath Holding
-          </CheckLabel>
-          <CheckLabel htmlFor="negotiation">
-            <input 
-              type="checkbox"
-              name="skills"
-              value="negotiation"
-              onChange={updateForm}
-            />Negotiation
-          </CheckLabel>
-          <br></br>
-          <CheckLabel htmlFor="monkeys">
-            <input 
-              type="checkbox"
-              name="skills"
-              value="monkeys"
-              onChange={updateForm}
-            />Monkey Wrangling
-          </CheckLabel>        
-          <CheckLabel htmlFor="seduction">
-            <input 
-              type="checkbox"
-              name="skills"
-              value="seduction"
-              onChange={updateForm}
-            />The Art of Seduction
-          </CheckLabel>
-          {errorsState.skills && <Error>{errorsState.skills}</Error>}
-        </InputContainer>
+        <div className="input-container">
+          <p className="bold">Which skills do you want to learn?</p>
+          <p className="check-all">(Check all that apply)</p>
+          <div className="checkbox-container">
+            <label className="check-label" htmlFor="insults">
+              <input className="input"
+                type="checkbox"
+                name="skills"
+                value="insults"
+                onChange={updateForm}
+              />Insult Mastery
+            </label>
+            <label className="check-label" htmlFor="breath">
+              <input className="input"
+                type="checkbox"
+                name="skills"
+                value="breath"
+                onChange={updateForm}
+              />Breath Holding
+            </label>
+            <label className="check-label" htmlFor="negotiation">
+              <input className="input"
+                type="checkbox"
+                name="skills"
+                value="negotiation"
+                onChange={updateForm}
+              />Negotiation
+            </label>
+            <label className="check-label" htmlFor="monkeys">
+              <input className="input"
+                type="checkbox"
+                name="skills"
+                value="monkeys"
+                onChange={updateForm}
+              />Monkey Wrangling
+            </label>   
+            <label className="check-label" htmlFor="seduction">
+              <input className="input"
+                type="checkbox"
+                name="skills"
+                value="seduction"
+                onChange={updateForm}
+              />The Art of Seduction
+            </label>
+          </div>
+          {errorsState.skills && <p className="error-check">{errorsState.skills}</p>}
+        </div>
 
-        <InputContainerLast>
-          <Label htmlFor="faveInsult">Give us your best insult, you lily-livered chicken.</Label>
-          <TextArea 
+        <div className="input-container">
+          <label className="label" htmlFor="faveInsult">Give us your best insult, you lily-livered chicken.</label>
+          <textarea className="textarea"
             name="faveInsult"
             placeholder="You fight like a cow." 
             value={formState.faveInsult} 
             onChange={updateForm} 
           />
-          {errorsState.faveInsult && <Error>{errorsState.faveInsult}</Error>}
-        </InputContainerLast>
+          {errorsState.faveInsult && <p className="error">{errorsState.faveInsult}</p>}
+        </div>
 
-        <Button type="submit">Submit</Button>
-      </StyleForm>
-    </PageContainer>
+        <button className="submit-button" type="submit">Submit</button>
+      </form>
+    </div>
   );
 };
